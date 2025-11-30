@@ -7,6 +7,7 @@ from datetime import datetime, timezone, timedelta
 import requests
 from bs4 import BeautifulSoup
 import re
+from openai import OpenAI
 
 # Define the UTC+8 timezone
 JST = timezone(timedelta(hours=8))
@@ -51,7 +52,7 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-rgijapfapkddnnbbwftgcqycdn
 # Assuming SiliconFlow (siliconflow.cn) based on the model name "Qwen/Qwen2.5-7B-Instruct" commonly hosted there
 OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.siliconflow.cn/v1")
 
-client = True
+client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
 # Global storage for online users: {session_id: nickname}
 online_users = {}
 
