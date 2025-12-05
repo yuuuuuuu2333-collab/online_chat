@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Connect to SocketIO
-    const socket = io();
+    const socket = io({ path: '/socket.io' });
     
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -133,11 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         userList.innerHTML = '';
         users.forEach(user => {
             const li = document.createElement('li');
-            if (user === CURRENT_NICKNAME) {
+            li.innerHTML = `<span class="user-status ${user.is_online ? 'online' : 'offline'}"></span>${user.nickname}`;
+            if (user.nickname === CURRENT_NICKNAME) {
                 li.classList.add('self');
-                li.innerHTML = `<span class="user-status"></span>${user} (You)`;
-            } else {
-                li.innerHTML = `<span class="user-status"></span>${user}`;
+                li.innerHTML += ' (You)';
             }
             userList.appendChild(li);
         });
@@ -172,19 +171,27 @@ document.addEventListener('DOMContentLoaded', () => {
         content.classList.add('message-content');
 
         if (data.type === 'movie') {
-            // Movie player integration
+            const iframeContainer = document.createElement('div');
+            iframeContainer.classList.add('iframe-container');
+
             const iframe = document.createElement('iframe');
             iframe.src = data.payload;
-            iframe.width = '400';
-            iframe.height = '400';
             iframe.allowFullscreen = true;
             iframe.frameBorder = '0';
-            content.appendChild(iframe);
+            iframeContainer.appendChild(iframe);
+            content.appendChild(iframeContainer);
         } else if (data.type === 'ai') {
             // AI response
             // Convert newlines to <br> for better display
             const formattedPayload = data.payload.replace(/\n/g, '<br>');
             content.innerHTML = `<strong>🤖 川小农:</strong><br>${formattedPayload}`;
+        } else if (data.type === 'weather') {
+            // Weather response
+            const formattedPayload = data.payload.replace(/\n/g, '<br>');
+            content.innerHTML = `<strong>☁️ 天气:</strong><br>${formattedPayload}`;
+            if (data.weather_type) {
+                setWeatherBackground(data.weather_type);
+            }
         } else {
             content.textContent = data.payload;
         }
@@ -203,5 +210,38 @@ document.addEventListener('DOMContentLoaded', () => {
         div.textContent = msg;
         messagesContainer.appendChild(div);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function setWeatherBackground(weatherType) {
+        const body = document.body;
+        // Remove any existing weather classes
+        body.classList.remove('weather-sunny', 'weather-cloudy', 'weather-rainy', 'weather-snowy');
+
+        switch (weatherType) {
+            case '晴天':
+                body.classList.add('weather-sunny');
+                break;
+            case '多云':
+            case '阴':
+                body.classList.add('weather-cloudy');
+                break;
+            case '雨':
+            case '小雨':
+            case '中雨':
+            case '大雨':
+            case '暴雨':
+                body.classList.add('weather-rainy');
+                break;
+            case '雪':
+            case '小雪':
+            case '中雪':
+            case '大雪':
+            case '暴雪':
+                body.classList.add('weather-snowy');
+                break;
+            default:
+                // Default background or no specific weather background
+                break;
+        }
     }
 });

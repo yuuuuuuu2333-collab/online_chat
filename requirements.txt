@@ -1,7 +1,8 @@
 Flask
 Flask-SocketIO
-eventlet
-python-socketio
-openai
 requests
 beautifulsoup4
+python-socketio
+python-engineio
+openai
+werkzeug

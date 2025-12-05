@@ -53,7 +53,7 @@ label {
     font-weight: bold;
 }
 
-input[type="text"], select {
+input[type="text"], input[type="password"], select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -62,7 +62,7 @@ input[type="text"], select {
     outline: none;
 }
 
-input[type="text"]:focus, select:focus {
+input[type="text"]:focus, input[type="password"]:focus, select:focus {
     border-color: var(--primary-color);
 }
 
@@ -76,10 +76,33 @@ input[type="text"]:focus, select:focus {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 10px; /* Add margin to separate buttons */
 }
 
 .btn:hover {
     background-color: #357abd;
+}
+
+.secondary-btn {
+    background-color: #6c757d; /* A different color for secondary action */
+}
+
+.secondary-btn:hover {
+    background-color: #5a6268;
+}
+
+.toggle-form {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.toggle-form a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.toggle-form a:hover {
+    text-decoration: underline;
 }
 
 .error-message {
